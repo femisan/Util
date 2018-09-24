@@ -2,16 +2,16 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-def plotMatrixIn3D(Mat,name='Surface Plot', figsize =(11,9)):
-
-    X,Y = np.meshgrid( np.arange(Mat.shape[0]), np.arange(Mat.shape[1]) )
-    # fig = plt.figure()
-    fig, ax0  = plt.subplots(num=None, figsize=figsize, dpi=80, facecolor='w', edgecolor='k')
-    ax = fig.add_subplot(111, projection='3d')
-    surf = ax.plot_surface(X, Y, Mat, cmap='bwr', linewidth=0)
-    fig.colorbar(surf)
-    ax.set_title(name)
-    fig.show()
+# def plotMatrixIn3D(Mat,name='Surface Plot', figsize =(11,9)):
+#
+#     X,Y = np.meshgrid( np.arange(Mat.shape[0]), np.arange(Mat.shape[1]) )
+#     # fig = plt.figure()
+#     fig, ax0  = plt.subplots(num=None, figsize=figsize, dpi=80, facecolor='w', edgecolor='k')
+#     ax = fig.add_subplot(111, projection='3d')
+#     surf = ax.plot_surface(X, Y, Mat, cmap='bwr', linewidth=0)
+#     fig.colorbar(scurf)
+#     ax.set_title(name)
+#     fig.show()
 
 def plotCrossLine(data,title='',cbarName='',climit=None,xlabel='x',ylabel='y'):
     fig = plt.figure()
@@ -21,11 +21,11 @@ def plotCrossLine(data,title='',cbarName='',climit=None,xlabel='x',ylabel='y'):
     plt.xlabel(xlabel)
     plt.title(title)
     plt.show()
-    cbar=fig.colorbar(plt,fraction=0.046, pad=0.04)
-    cbar.set_label(cbarName, rotation=270, labelpad=8)
-    if climit is not None:
-        cbar.set_clim(climit)
-    cbar.draw_all()
+    # cbar=fig.colorbar(plt,fraction=0.046, pad=0.04)
+    # cbar.set_label(cbarName, rotation=270, labelpad=8)
+    # if climit is not None:
+    #     cbar.set_clim(climit)
+    # cbar.draw_all()
 
 def plotSelectedRange(freqLine,selectList,rfBand,title='Excited Figure'):
     fig = plt.figure()
@@ -40,20 +40,20 @@ def plotSelectedRange(freqLine,selectList,rfBand,title='Excited Figure'):
     plt.xlabel('Image Position')
     plt.title(title)
     plt.show()
-
-
-def plotSeperatedOddEvenImage(image):
-    imagePix = image.shape[0]
-    evenImage = np.zeros((imagePix,imagePix))
-    oddImage = np.zeros((imagePix,imagePix))
-    for i in range(image.shape[2]):
-        if np.mod(i,2) == 0:
-            evenImage = evenImage + image[:,:,i] *i
-        else:
-            oddImage = oddImage + image[:,:,i] *i
-    plotImageWithTitle(evenImage,'Even Lines')
-    plotImageWithTitle(evenImage,'Odd Lines')
-    return oddImage,evenImage
+#
+#
+# def plotSeperatedOddEvenImage(image):
+#     imagePix = image.shape[0]
+#     evenImage = np.zeros((imagePix,imagePix))
+#     oddImage = np.zeros((imagePix,imagePix))
+#     for i in range(image.shape[2]):
+#         if np.mod(i,2) == 0:
+#             evenImage = evenImage + image[:,:,i] *i
+#         else:
+#             oddImage = oddImage + image[:,:,i] *i
+#     plotImageWithTitle(evenImage,'Even Lines')
+#     plotImageWithTitle(evenImage,'Odd Lines')
+#     return oddImage,evenImage
 
 
 def plotImageWithTitle(image,title='',cbarName='',climit=None,figsize=(11,9),updown=False):
@@ -71,6 +71,7 @@ def plotImageWithTitle(image,title='',cbarName='',climit=None,figsize=(11,9),upd
     if climit is not None:
         cbar.set_clim(climit)
     cbar.draw_all()
+    plt.show()
 
 def plotVectorStreamLine(Vx,Vy,cbarName='',climit=None):
 
