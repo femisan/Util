@@ -1,5 +1,5 @@
-# from . import staticPlot
-# from . import interactPlot
+from . import staticPlot
+from . import interactPlot
 #
 # import plotly.plotly as py
 # import plotly.graph_objs as go
@@ -7,5 +7,5 @@
 
 # init_notebook_mode()
 
-# from interactPlot import *
+# from interactPlot import plotDataFrameColumn,plotOneLine
 # from staticPlot import *
