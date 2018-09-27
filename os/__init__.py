@@ -1,6 +1,11 @@
 import os
 import sys
 def getFilePathList(foldar_path,file_type=None):
+    """
+    :param foldar_path: the foldar you want to traversal
+    :param file_type:  extract file path list by file_type, if it's None, return all
+    :return:     file list
+    """
     file_list =[]
     for root, dirs, files in os.walk(foldar_path):
         for file in files:
