@@ -1,6 +1,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
 # def plotMatrixIn3D(Mat,name='Surface Plot', figsize =(11,9)):
 #
@@ -12,6 +13,20 @@ import matplotlib.pyplot as plt
 #     fig.colorbar(scurf)
 #     ax.set_title(name)
 #     fig.show()
+
+
+def plotMatIn3D(Mat,x=None,y=None,title='Title',x_label='x',y_label='y',figsize =(11,9),view_angle=210):
+    if x is None or y is None:
+        x,y = np.meshgrid( np.arange(Mat.shape[0]), np.arange(Mat.shape[1]) )
+
+    fig = plt.figure(figsize=figsize)
+    ax = fig.add_subplot(111, projection='3d')
+    ax.set_xlabel(x_label)
+    ax.set_ylabel(y_label)
+    ax.set_title(title)
+    ax.view_init(azim=view_angle)
+    ax.plot_wireframe(X=x,Y=y,Z=Mat)
+    plt.show()
 
 def plotCrossLine(data,title='',cbarName='',climit=None,xlabel='x',ylabel='y'):
     fig = plt.figure()
