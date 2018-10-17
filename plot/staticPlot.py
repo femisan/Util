@@ -2,6 +2,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
+from IPython.html.widgets import interact
 
 # def plotMatrixIn3D(Mat,name='Surface Plot', figsize =(11,9)):
 #
@@ -14,6 +15,17 @@ from mpl_toolkits.mplot3d import Axes3D
 #     ax.set_title(name)
 #     fig.show()
 
+
+def plotImagesWithInteractBar(images,axis=2,title='',cbarName='',climit=None,figsize=(4,4),updown=False):
+    fig, ax = plt.subplots()
+    def replot_it(index):
+        # plt.imshow(eximage[:,:,index])
+        slc = [slice(None)] * len(images.shape)
+        slc[axis] = slice(index,index+1)
+        one_image = images[slc]
+        plotImageWithTitle(np.squeeze(one_image),title,cbarName,climit,figsize,updown)
+        ax.figure.canvas.draw()
+    interact(replot_it,index=(0,images.shape[axis]-1))
 
 def plotMatIn3D(Mat,x=None,y=None,title='Title',x_label='x',y_label='y',figsize =(11,9),view_angle=210):
     if x is None or y is None:
