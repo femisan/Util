@@ -1,5 +1,6 @@
 import os
 import sys
+import pickle
 def getFilePathList(foldar_path,file_type=None):
     """
     :param foldar_path: the foldar you want to traversal
@@ -21,3 +22,15 @@ class lazy(object):
         val = self.func(instance)
         setattr(instance, self.func.__name__, val)
         return val
+
+def readPickle(file_name):
+    if '.pkl' not in file_name:
+        file_name = file_name +'.pkl'
+    with open(file_name, "rb") as f:
+        return pickle.load(file=f)
+
+def writePickle(file_name,variable):
+    if '.pkl' not in file_name:
+        file_name = file_name + '.pkl'
+    with open(file_name,'wb') as f:
+        pickle.dump(variable, f, protocol = pickle.HIGHEST_PROTOCOL)
