@@ -17,13 +17,17 @@ from IPython.html.widgets import interact
 
 
 def plotImagesWithInteractBar(images,axis=2,title='',cbarName='',climit=None,figsize=(4,4),updown=False):
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=figsize)
     def replot_it(index):
         # plt.imshow(eximage[:,:,index])
         slc = [slice(None)] * len(images.shape)
         slc[axis] = slice(index,index+1)
-        one_image = images[slc]
-        plotImageWithTitle(np.squeeze(one_image),title,cbarName,climit,figsize,updown)
+        one_image = np.squeeze(images[slc])
+        if updown:
+            imgplot=plt.imshow(one_image,origin='lower')
+        else:
+            imgplot=plt.imshow(one_image)
+        # plotImageWithTitle(np.squeeze(one_image),title,cbarName,climit,figsize,updown)
         ax.figure.canvas.draw()
     interact(replot_it,index=(0,images.shape[axis]-1))
 
