@@ -1,6 +1,8 @@
 import os
 import sys
 import pickle
+import scipy.io
+
 def getFilePathList(foldar_path,file_type=None):
     """
     :param foldar_path: the foldar you want to traversal
@@ -34,3 +36,8 @@ def writePickle(file_name,variable):
         file_name = file_name + '.pkl'
     with open(file_name,'wb') as f:
         pickle.dump(variable, f, protocol = pickle.HIGHEST_PROTOCOL)
+
+def readMat(file_name):
+    mat = scipy.io.loadmat(file_name)
+    print ('this mat file have variables: ',mat.keys())
+    return mat
