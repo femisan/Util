@@ -12,6 +12,11 @@ def convertMeshPoint(x,y,z):
     return points
 
 def plotSurface(Mat,x=None,y=None):
+    """
+    :param Mat:
+    :param x:
+    """
+
     if x is None or y is None:
         x,y = np.meshgrid( np.arange(Mat.shape[0]), np.arange(Mat.shape[1]) )
 
@@ -65,7 +70,7 @@ def plotImage(img,title='',scale=1.0):
 #     plot_bgcolor='#c7c7c7'
     )
     fig=go.Figure(data=d,layout=layout)
-    iplot(fig,show_link=False)
+    iplot(fig,show_link=True)
 
 
 def plotDataFrameColumn(data_frame,mode_dict={},title=''):
@@ -76,4 +81,4 @@ def plotDataFrameColumn(data_frame,mode_dict={},title=''):
         mode = mode_dict.get(key,'lines+markers')
         d.append(go.Scatter(x=series.index,y=series.values,name=key,mode=mode))
     fig=go.Figure(data=d,layout=go.Layout(title=title))
-    iplot(fig,show_link=False)
+    iplot(fig,show_link=True)

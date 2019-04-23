@@ -2,7 +2,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
-from IPython.html.widgets import interact
+from ipywidgets import interact, widgets
+# from IPython.display import display
+import warnings
 
 # def plotMatrixIn3D(Mat,name='Surface Plot', figsize =(11,9)):
 #
@@ -17,18 +19,20 @@ from IPython.html.widgets import interact
 
 
 def plotImagesWithInteractBar(images,axis=2,title='',cbarName='',climit=None,figsize=(4,4),updown=False):
+    """
+    :param image: images you want to plot 3-dimension
+    :param axis:  axis number contains multi images
+    """
+
     fig, ax = plt.subplots(figsize=figsize)
     def replot_it(index):
-        # plt.imshow(eximage[:,:,index])
-        slc = [slice(None)] * len(images.shape)
-        slc[axis] = slice(index,index+1)
-        one_image = np.squeeze(images[slc])
-        if updown:
-            imgplot=plt.imshow(one_image,origin='lower')
-        else:
-            imgplot=plt.imshow(one_image)
-        # plotImageWithTitle(np.squeeze(one_image),title,cbarName,climit,figsize,updown)
-        ax.figure.canvas.draw()
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            slc = [slice(None)] * len(images.shape)
+            slc[axis] = slice(index,index+1)
+            one_image = np.squeeze(images[slc])
+            plotImageWithTitle(np.squeeze(one_image),title,cbarName,climit,figsize,updown)
+            ax.figure.canvas.draw()
     interact(replot_it,index=(0,images.shape[axis]-1))
 
 def plotMatIn3D(Mat,x=None,y=None,title='Title',x_label='x',y_label='y',figsize =(11,9),view_angle=210):
@@ -89,11 +93,15 @@ def plotSelectedRange(freqLine,selectList,rfBand,title='Excited Figure'):
 
 def plotImageWithTitle(image,title='',cbarName='',climit=None,figsize=(11,9),updown=False):
     # plt.figure()
+    clip_image = image.copy()
+    if climit is not None:
+        clip_image[clip_image > climit[1]] = climit[1]
+        clip_image[clip_image < climit[0]] = climit[0]
     fig0, ax0 = plt.subplots(num=None, figsize=figsize, dpi=80, facecolor='w', edgecolor='k')
     if updown:
-        imgplot=plt.imshow(image,origin='lower')
+        imgplot=plt.imshow(clip_image,origin='lower')
     else:
-        imgplot=plt.imshow(image)
+        imgplot=plt.imshow(clip_image)
     imgplot.set_cmap('nipy_spectral')
 #     imgplot.set_cmap('gist_rainbow')
     plt.title(title)
@@ -103,6 +111,31 @@ def plotImageWithTitle(image,title='',cbarName='',climit=None,figsize=(11,9),upd
         cbar.set_clim(climit)
     cbar.draw_all()
     plt.show()
+
+def plotMRIImage(image,title=None,cbarName='',climit=None,color ='gray',figsize=(5,5),norm=False,updown=True):
+    # plt.figure()
+    clip_image = image.copy()
+    if norm:
+        clip_image /= np.max(np.abs(clip_image))
+    if climit is not None:
+        clip_image[clip_image > climit[1]] = climit[1]
+        clip_image[clip_image < climit[0]] = climit[0]
+    fig0, ax0 = plt.subplots(num=None, figsize=figsize, dpi=80, facecolor='w', edgecolor='k')
+    if updown:
+        imgplot=plt.imshow(clip_image,origin='lower')
+    else:
+        imgplot=plt.imshow(clip_image)
+    imgplot.set_cmap(color)
+#     imgplot.set_cmap('gist_rainbow')
+    if title is not None:
+        plt.title(title)
+    cbar=fig0.colorbar(imgplot,fraction=0.046, pad=0.04)
+    cbar.set_label(cbarName, rotation=270, labelpad=8)
+    if climit is not None:
+        cbar.set_clim(climit)
+    cbar.draw_all()
+    plt.show()
+
 
 def plotVectorStreamLine(Vx,Vy,cbarName='',climit=None):
 

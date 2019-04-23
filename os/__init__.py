@@ -2,6 +2,9 @@ import os
 import sys
 import pickle
 import scipy.io
+from datetime import datetime
+import pydicom
+import numpy as np
 
 def getFilePathList(foldar_path,file_type=None):
     """
@@ -34,6 +37,9 @@ def readPickle(file_name):
 def writePickle(file_name,variable):
     if '.pkl' not in file_name:
         file_name = file_name + '.pkl'
+    if os.path.isfile(file_name):
+        file_name = file_name.split('.')[0] + datetime.now().strftime("%Y-%m-%d-%H-%M-%S") + '.pkl'
+        print('File already existed, renamed to : ', file_name)
     with open(file_name,'wb') as f:
         pickle.dump(variable, f, protocol = pickle.HIGHEST_PROTOCOL)
 
@@ -41,3 +47,13 @@ def readMat(file_name):
     mat = scipy.io.loadmat(file_name)
     print ('this mat file have variables: ',mat.keys())
     return mat
+
+def readDicomsToArray(dirPath):
+    fileList = getFilePathList(dirPath)
+    refDicom = pydicom.read_file(fileList[0])
+    refImage = refDicom.pixel_array
+    dicomArray = np.zeros((refImage.shape[0],refImage.shape[1],len(fileList)))
+    print('Dicom Files readed to array with shape : ' + str(dicomArray.shape))
+    for i in range(len(fileList)):
+        dicomArray[:,:,i] = pydicom.read_file(fileList[i]).pixel_array
+    return dicomArray
