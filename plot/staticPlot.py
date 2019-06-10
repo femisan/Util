@@ -91,7 +91,7 @@ def plotSelectedRange(freqLine,selectList,rfBand,title='Excited Figure'):
 #     return oddImage,evenImage
 
 
-def plotImageWithTitle(image,title='',cbarName='',climit=None,figsize=(11,9),updown=False):
+def plotImageWithTitle(image,title='',cbarName='',climit=None,figsize=(11,9),updown=False,axis=None):
     # plt.figure()
     clip_image = image.copy()
     if climit is not None:
@@ -105,6 +105,8 @@ def plotImageWithTitle(image,title='',cbarName='',climit=None,figsize=(11,9),upd
     imgplot.set_cmap('nipy_spectral')
 #     imgplot.set_cmap('gist_rainbow')
     plt.title(title)
+    if axis is not None and axis is False:
+        plt.axis('off')
     cbar=fig0.colorbar(imgplot,fraction=0.046, pad=0.04)
     cbar.set_label(cbarName, rotation=270, labelpad=8)
     if climit is not None:
@@ -112,7 +114,7 @@ def plotImageWithTitle(image,title='',cbarName='',climit=None,figsize=(11,9),upd
     cbar.draw_all()
     plt.show()
 
-def plotMRIImage(image,title=None,cbarName='',climit=None,color ='gray',figsize=(5,5),norm=False,updown=True):
+def plotMRIImage(image,title=None,cbarName='',climit=None,color ='gray',figsize=(5,5),norm=False,updown=True,axis=None):
     # plt.figure()
     clip_image = image.copy()
     if norm:
@@ -129,6 +131,8 @@ def plotMRIImage(image,title=None,cbarName='',climit=None,color ='gray',figsize=
 #     imgplot.set_cmap('gist_rainbow')
     if title is not None:
         plt.title(title)
+    if axis is not None and axis is False:
+        plt.axis('off')
     cbar=fig0.colorbar(imgplot,fraction=0.046, pad=0.04)
     cbar.set_label(cbarName, rotation=270, labelpad=8)
     if climit is not None:
@@ -136,6 +140,26 @@ def plotMRIImage(image,title=None,cbarName='',climit=None,color ='gray',figsize=
     cbar.draw_all()
     plt.show()
 
+def plotMRIImageWithFieldMap(Image,fieldmap,title='',cbarName='',climit=None,figsize=(11,9),updown=False,alpha=0.5,axis=None):
+    # plt.figure()
+    fig0, ax0 = plt.subplots(num=None, figsize=figsize, dpi=80, facecolor='w', edgecolor='k')
+    if updown:
+        imgplot = plt.imshow(Image, 'gray', interpolation='none',origin='lower')
+        imgplot = plt.imshow(fieldmap, 'nipy_spectral', interpolation='none',origin='lower',alpha=alpha)
+#         imgplot=plt.imshow(image,origin='lower')
+    else:
+        imgplot = plt.imshow(Image, 'gray', interpolation='none')
+        imgplot = plt.imshow(fieldmap, 'nipy_spectral', interpolation='none',alpha=alpha)
+    imgplot.set_cmap('jet')
+#     imgplot.set_cmap('gist_rainbow')
+    plt.title(title)
+    if axis is not None and axis is False:
+        plt.axis('off')
+    cbar=fig0.colorbar(imgplot,fraction=0.046, pad=0.04)
+    cbar.set_label(cbarName, rotation=270, labelpad=8)
+    if climit is not None:
+        cbar.set_clim(climit)
+    cbar.draw_all()
 
 def plotVectorStreamLine(Vx,Vy,cbarName='',climit=None):
 
@@ -159,3 +183,71 @@ def plotVectorStreamLine(Vx,Vy,cbarName='',climit=None):
     if climit is not None:
         cbar.set_clim(climit)
     cbar.draw_all()
+
+
+##plotSelectedRange(sliceFreqMap[:, 120], offsetFrequency[:,120],RFFREQLST,rfBandWidth, 'Excition Profile around SPIOs boundry')
+# this function is in Dropbox/ViewLine/CreateMRIImage.ipy
+
+# def plotSelectedRange(sliceSelection,deltaB, selectList, rfBand, title='Excited Figure'):
+#     fig, ax = plt.subplots()
+# #     fig = plt.figure()
+#     xs = np.arange(IMAGEPIX)
+#     xmin,xmax= 50,200
+#     zerobias = sliceSelection[xmin]
+#
+#     plt.plot(xs, sliceSelection-zerobias, ':',color='k')
+#     plt.plot(xs, deltaB,'--',color='k')
+#     plt.plot(xs, sliceSelection-zerobias+ deltaB,'-',color='k')
+#
+#     trueField = sliceSelection + deltaB
+#
+#     excitedSlicePosition =[]
+#     for i,freq in enumerate(selectList):
+#         line = np.zeros(IMAGEPIX)
+#         line[:] = freq
+#         if i%2==0:
+#             color = 'b'
+#         else:
+#             color = 'r'
+#         plt.plot(line - rfBand/2 - zerobias,'-',color=color,alpha=0.5)
+#
+#         print(i)
+#         # only plot even lines
+#         if i%2==0:
+#             excite = np.argwhere((trueField<=freq+rfBand/2) &(trueField >= freq - rfBand/2)).flatten()
+#             #  excite will obtained data like [116 145 146 147 148  168 169]
+#             # using ediff1d and minus 1 to find the edge of index
+#             splitIndex = np.array(np.nonzero(np.ediff1d(excite) - 1)).flatten()
+#             # print(excite)
+#             if (size(splitIndex)>0):
+#                 splitIndex = splitIndex + 1
+#                 excitedSlicePosition = excitedSlicePosition+ np.split(excite,splitIndex)
+#             else:
+#                 excitedSlicePosition = excitedSlicePosition+ [excite]
+#
+#     # print(excitedSlicePosition)
+#     for ix  in excitedSlicePosition:
+#         if size(ix)> 0:
+#             if size(ix) == 1:
+#                 # set edge to 1 will disappear the narrow line
+#                 edge = 1
+#             else:
+#                 edge = 0.5
+#             ix = np.append(ix,ix[-1]+1)
+#             print(ix)
+#             iy = np.take(trueField, ix)
+#             a = min(ix)
+#             b = max(ix)
+#             iy = iy - zerobias
+#             verts = [(a, 0), *zip(ix, iy), (b, 0)]
+#
+#             poly = Polygon(verts, facecolor = '0.8', edgecolor= str(edge))
+#             ax.add_patch(poly)
+#
+#
+#     plt.xlim(xmin,xmax)
+#     plt.ylim(0,30000-zerobias)
+#     plt.ylabel('Frequency (Hz)')
+#     plt.xlabel('Image Position')
+#     plt.title(title)
+#     plt.show()
