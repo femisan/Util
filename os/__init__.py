@@ -78,3 +78,11 @@ def readDicomsToArray(dirPath):
         # print(fileList[i])
         dicomArray[:,:,i] = pydicom.read_file(fileList[i]).pixel_array
     return dicomArray
+
+def readMRIfromIds(foldar,idList):
+    # foldar is the root dir
+    # the id in id list must satisfy the form '_E' +id
+    imagesDirs = getDirsList(foldar,idList)
+    arrList = [readDicomsToArray(oneDir) for oneDir in imagesDirs]
+    finalArr = np.concatenate(arrList,axis=2)
+    return finalArr
