@@ -6,7 +6,7 @@ from ipywidgets import interact, widgets
 # from IPython.display import display
 import warnings
 
-# def plotMatrixIn3D(Mat,name='Surface Plot', figsize =(11,9)):
+# def plotMatrixIn3D(Mat,name='Surface Plot', figsize =(5,5)):
 #
 #     X,Y = np.meshgrid( np.arange(Mat.shape[0]), np.arange(Mat.shape[1]) )
 #     # fig = plt.figure()
@@ -35,7 +35,7 @@ def plotImagesWithInteractBar(images,axis=2,title='',cbarName='',climit=None,fig
             ax.figure.canvas.draw()
     interact(replot_it,index=(0,images.shape[axis]-1))
 
-def plotMatIn3D(Mat,x=None,y=None,title='Title',x_label='x',y_label='y',figsize =(11,9),view_angle=210):
+def plotMatIn3D(Mat,x=None,y=None,title='Title',x_label='x',y_label='y',figsize =(5,5),view_angle=210):
     if x is None or y is None:
         x,y = np.meshgrid( np.arange(Mat.shape[0]), np.arange(Mat.shape[1]) )
 
@@ -91,7 +91,7 @@ def plotSelectedRange(freqLine,selectList,rfBand,title='Excited Figure'):
 #     return oddImage,evenImage
 
 
-def plotImageWithTitle(image,title='',cbarName='',climit=None,figsize=(11,9),updown=False,axis=None):
+def plotImageWithTitle(image,title='',cbarName='',climit=None,figsize=(5,5),updown=False,axis=None):
     # plt.figure()
     clip_image = image.copy()
     if climit is not None:
@@ -140,7 +140,7 @@ def plotMRIImage(image,title=None,cbarName='',climit=None,color ='gray',figsize=
     cbar.draw_all()
     plt.show()
 
-def plotMRIImageWithFieldMap(Image,fieldmap,title='',cbarName='',climit=None,figsize=(11,9),updown=False,alpha=0.5,axis=None):
+def plotMRIImageWithFieldMap(Image,fieldmap,title='',cbarName='',climit=None,figsize=(5,5),updown=False,alpha=0.5,axis=None):
     # plt.figure()
     fig0, ax0 = plt.subplots(num=None, figsize=figsize, dpi=80, facecolor='w', edgecolor='k')
     if updown:
@@ -173,7 +173,7 @@ def plotVectorStreamLine(Vx,Vy,cbarName='',climit=None):
 #     circle3 = plt.Circle((0, 0), 0.2, color='black', fill=False)
     X,Y = np.meshgrid( np.arange(horizontalSize), np.arange(verticalSize) )
 
-    fig0, ax0 = plt.subplots(num=None, figsize=(11,9), dpi=80, facecolor='w', edgecolor='k')
+    fig0, ax0 = plt.subplots(num=None, figsize=(5,5), dpi=80, facecolor='w', edgecolor='k')
 
     strm = ax0.streamplot(X, Y, Vx, Vy, color=strength,density=[1,2],cmap=plt.cm.plasma)
 #     ax0.streamplot(-X, Y, -Vx, Vy, color=strength,density=[1,2], cmap=plt.cm.plasma)
