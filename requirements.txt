@@ -1,1 +1,7 @@
+numpy
+scipy
+matplotlib
+pandas
 plotly
+pyevtk
+pydicom
