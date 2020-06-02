@@ -7,32 +7,8 @@ class spfd():
         # self.Lz = gridLength[2]
         self.CoilCurrent = None
         self.affineMat = None
+#         self.jmag = None
 
-    # def convCsv2xyz(self,coil_path):
-    #     x_all = []
-    #     y_all = []
-    #     z_all = []
-    #     with open(coil_path) as f:
-    #         lines = f.readlines()
-    #
-    #     coils = np.loadtxt(coil_path, delimiter=',')
-    #
-    #     # coil_arr_size = coils.shape
-    #     pointsPerLine = np.zeros(len(coils))
-    #     for i,each_line in enumerate(coils):
-    #         current = each_line[0]
-    #         x = each_line[1::3]*1e3
-    #         y = each_line[2::3]*1e3
-    #         z = each_line[3::3]*1e3
-    #         x_all.append(x)
-    #         y_all.append(y)
-    #         z_all.append(z)
-    #         pointsPerLine[i] = len(x)
-    #     self.CoilCurrent = np.abs(current)
-    #     x = np.asarray(np.concatenate(x_all), order='C')
-    #     y = np.asarray(np.concatenate(y_all), order='C')
-    #     z = np.asarray(np.concatenate(z_all), order='C')
-    #     return (x,y,z,pointsPerLine)
 
     def convCsv2xyz(self,coil_path):
         x_all = []
@@ -141,6 +117,7 @@ class spfd():
                     print("This line didn't processed :" + line)
                     continue
         jmag = np.sqrt(jx**2+jy**2+jz**2)
+#         self.jmag = jmag.copy()
         dict_key = [ varibale_name + t for t in ['x','y','z','mag']]
         write_file_name = imageToVTK(
             output_j_vtk_path,
@@ -149,3 +126,5 @@ class spfd():
             pointData={dict_key[0]:jx,dict_key[1]:jy,dict_key[2]:jz,dict_key[3]:jmag}
         )
         print(write_file_name)
+        return jmag
+#         return jmag.copy()
