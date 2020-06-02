@@ -8,26 +8,59 @@ class spfd():
         self.CoilCurrent = None
         self.affineMat = None
 
+    # def convCsv2xyz(self,coil_path):
+    #     x_all = []
+    #     y_all = []
+    #     z_all = []
+    #     with open(coil_path) as f:
+    #         lines = f.readlines()
+    #
+    #     coils = np.loadtxt(coil_path, delimiter=',')
+    #
+    #     # coil_arr_size = coils.shape
+    #     pointsPerLine = np.zeros(len(coils))
+    #     for i,each_line in enumerate(coils):
+    #         current = each_line[0]
+    #         x = each_line[1::3]*1e3
+    #         y = each_line[2::3]*1e3
+    #         z = each_line[3::3]*1e3
+    #         x_all.append(x)
+    #         y_all.append(y)
+    #         z_all.append(z)
+    #         pointsPerLine[i] = len(x)
+    #     self.CoilCurrent = np.abs(current)
+    #     x = np.asarray(np.concatenate(x_all), order='C')
+    #     y = np.asarray(np.concatenate(y_all), order='C')
+    #     z = np.asarray(np.concatenate(z_all), order='C')
+    #     return (x,y,z,pointsPerLine)
+
     def convCsv2xyz(self,coil_path):
-        coils = np.loadtxt(coil_path, delimiter=',')
         x_all = []
         y_all = []
         z_all = []
-        # coil_arr_size = coils.shape
-        pointsPerLine = np.zeros(len(coils))
-        for i,each_line in enumerate(coils):
-            current = each_line[0]
-            x = each_line[1::3]*1e3
-            y = each_line[2::3]*1e3
-            z = each_line[3::3]*1e3
-            x_all.append(x)
-            y_all.append(y)
-            z_all.append(z)
-            pointsPerLine[i] = len(x)
+        pointsPerLine = []
+        new_file =[]
+        with open(coil_path,mode='r') as f:
+            for line in f:
+                line = line.replace(',NaN','').replace(',\n','\n')
+                each_line = np.fromstring(line, dtype=float, sep=",")
+                current = each_line[0]
+                x = each_line[1::3]*1e3
+                y = each_line[2::3]*1e3
+                z = each_line[3::3]*1e3
+                x_all.append(x)
+                y_all.append(y)
+                z_all.append(z)
+                pointsPerLine.append(len(x))
+                new_file.append(line)
+        with open(coil_path,mode='w') as f:
+            for line in new_file:
+                f.write(line)
         self.CoilCurrent = np.abs(current)
         x = np.asarray(np.concatenate(x_all), order='C')
         y = np.asarray(np.concatenate(y_all), order='C')
         z = np.asarray(np.concatenate(z_all), order='C')
+        pointsPerLine = np.array(pointsPerLine)
         return (x,y,z,pointsPerLine)
 
     def getAffineMatrix(self,coil_position_path):
@@ -58,16 +91,19 @@ class spfd():
             save_path = polyLinesToVTK(output_coil_vtk_path,x1,y1,z1,pointsPerLine=pointsPerLine)
             print('with position file, vtk file be overwritten in: '+ save_path)
 
-    def visBrain(self, brain_map_path,spacing):
+    def visBrain( self, brain_map_path,spacing):
         output_brain_vtk_path =  brain_map_path.split('.')[0] +'_visBrain'
         with open(brain_map_path) as f:
             first_line = f.readline()
-            Dx,Dy,Dz  = [int(t.split('=')[1]) for t in first_line[1:].split(',') ]
-    #         print(Dx,Dy,Dz)
+            Dx,Dy,Dz  = [int(t.split('=')[1]) for t in first_line[1:].split(',')[0:3] ]
             lines = f.readlines()
             Vol = np.zeros((Dx,Dy,Dz))
             for i in range(Dz):
-                Vol[:,:,i] = np.loadtxt(lines[0+(Dy+1)*i:Dy+(Dy+1)*i], delimiter=',').T
+                try:
+                    Vol[:,:,i] = np.loadtxt([t.replace(',\n','\n') for t in lines[0+(Dy+1)*i:Dy+(Dy+1)*i]], delimiter=',').T
+                except:
+                    print("error happens on: "+ str(i))
+
             imageToVTK(
                 output_brain_vtk_path,
                 spacing=spacing,
