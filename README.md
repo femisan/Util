@@ -1,5 +1,5 @@
 # Util
-This Util library designed for some commn used functions in bee lab:
+This Util library designed for some common used functions in bee lab:
 
 ## installation
 - Download
@@ -11,7 +11,7 @@ This Util library designed for some commn used functions in bee lab:
 For MRI users, you can use this util to read dicom data generated from 7T Bruker MRI, 
 
 
-**Example**: after we export dicom datas from Bruker MRI, we save it to raw_data foldar,
+**Example**: after we export dicom datas from Bruker MRI, we can save them to the folder called "raw_data",
 ````
 + raw_data
 ++++++ liu-20200212_liu-20200212_stell__**E15**_P1_2.16.756.5.5.100.3611282843.14246.1581486821.87
@@ -27,6 +27,16 @@ from Util.plot.staticPlot import *
 rootDir = './raw_data/'
 Images = readMRIfromIds(rootDir,[15])
 plotMRIImage(Images[:,:,0],updown=False,axis=False)
+
+# for multiple datas:
+Img1 = readMRIfromIds('./data/',[13,14,15,16,17])
+# will return:
+#Dicom Files readed to array with shape : (256, 256, 5)
+#Dicom Files readed to array with shape : (256, 256, 5)
+#Dicom Files readed to array with shape : (256, 256, 5)
+#Dicom Files readed to array with shape : (256, 256, 5)
+#Dicom Files readed to array with shape : (256, 256, 5)
+# shape of Img1 will be (256,256,25)
 ````
 
 ## Common Usage2:
