@@ -14,7 +14,7 @@ For MRI users, you can use this util to read dicom data generated from 7T Bruker
 **Example**: after we export dicom datas from Bruker MRI, we can save them to the folder called "raw_data",
 ````
 + raw_data
-++++++ liu-20200212_liu-20200212_stell__**E15**_P1_2.16.756.5.5.100.3611282843.14246.1581486821.87
+++++++ liu-20200212_liu-20200212_stell__E15_P1_2.16.756.5.5.100.3611282843.14246.1581486821.87
 +++++++++++ MRIm1
 +++++++++++ MRIm2
 +++++++++++ MRIm3
