@@ -7,7 +7,10 @@ class spfd():
         # self.Lz = gridLength[2]
         self.CoilCurrent = None
         self.affineMat = None
-#         self.jmag = None
+        self.jx = None
+        self.jy = None
+        self.jz = None
+        self.jmag = None
 
 
     def convCsv2xyz(self,coil_path):
@@ -86,10 +89,10 @@ class spfd():
                 pointData={'brain':Vol}
             )
 
-    def visB(self,output_j_vtk_path,result_file_name):
-        self.visJ(output_j_vtk_path,result_file_name,varibale_name='B')
+    def visE(self,output_j_vtk_path,result_file_name,conductivity=0.11):
+        return self.visJ(output_j_vtk_path,result_file_name,varibale_name='E',conductivity=conductivity)
 
-    def visJ(self,output_j_vtk_path,result_file_name,varibale_name='J'):
+    def visJ(self,output_j_vtk_path,result_file_name,varibale_name='J',conductivity=1):
         txt_keyword = varibale_name +':'
         with open(result_file_name, 'r') as f:
             for line in f:
@@ -106,17 +109,21 @@ class spfd():
                     jx = np.zeros(dim)
                     jy = np.zeros(dim)
                     jz = np.zeros(dim)
-                elif line[:2] == txt_keyword:
-                    index,j_vec = line.replace(txt_keyword,'').split('=')
+                elif line[:2] == 'J:':
+                    index,j_vec = line.replace('J:','').split('=')
                     index = tuple([int(t) for t in index.split(',')][:-1])
                     j_vec = [float(t) for t in j_vec.split(',')]
-                    jx[index] = j_vec[0]
-                    jy[index] = j_vec[1]
-                    jz[index] = j_vec[2]
+                    jx[index] = j_vec[0]/conductivity
+                    jy[index] = j_vec[1]/conductivity
+                    jz[index] = j_vec[2]/conductivity
                 else:
                     print("This line didn't processed :" + line)
                     continue
         jmag = np.sqrt(jx**2+jy**2+jz**2)
+        self.jx = jx
+        self.jy = jy
+        self.jz = jz
+        self.jmag = jmag
 #         self.jmag = jmag.copy()
         dict_key = [ varibale_name + t for t in ['x','y','z','mag']]
         write_file_name = imageToVTK(
