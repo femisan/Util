@@ -114,7 +114,7 @@ def plotImageWithTitle(image,title='',cbarName='',climit=None,figsize=(5,5),updo
     cbar.draw_all()
     plt.show()
 
-def plotMRIImage(image,title=None,cbarName='',climit=None,color ='gray',figsize=(5,5),norm=False,updown=True,axis=None):
+def plotMRIImage(image,title=None,cbarName='',climit=None,color ='gray',figsize=(5,5),norm=False,updown=False,axis=None):
     # plt.figure()
     clip_image = image.copy()
     if norm:

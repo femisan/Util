@@ -86,3 +86,10 @@ def readMRIfromIds(foldar,idList):
     arrList = [readDicomsToArray(oneDir) for oneDir in imagesDirs]
     finalArr = np.concatenate(arrList,axis=2)
     return finalArr
+
+def readViewLineImgs(foldar, idList, shift_dis, pixel_size=0.1953125):
+    imgs = readMRIfromIds(foldar,idList)
+    shift_pixel = int(shift_dis/0.1953125)
+    for i in range(imgs.shape[2]):
+        imgs[:,:,i] = np.roll(imgs[:,:,i],-shift_pixel,axis=0).T
+    return imgs
