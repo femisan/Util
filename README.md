@@ -1,5 +1,5 @@
 # Util
-This Util library designed for some common used functions in bee lab:
+This Util library designed for some common used functions in bee lab: +Yoshioka
 
 ## installation
 - Download
