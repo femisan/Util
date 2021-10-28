@@ -76,14 +76,18 @@ class spfd():
             first_line = f.readline()
             Dx,Dy,Dz  = [int(t.split('=')[1]) for t in first_line[1:].split(',')[0:3] ]
             print("Readed Array Size",Dx,Dy,Dz)
-            lines = f.readlines()
-            print("Total lines number:",len(lines))
+#             lines = f.readlines()
+            lines = f.read().splitlines()
+            lines = list(filter(None, lines))
+            print("Total lines number should be :" + str(Dy*Dz) + ", readed line numbers: " + str(len(lines)))
             Vol = np.zeros((Dx,Dy,Dz))
             for i in range(Dz):
                 try:
-                    one_slice = np.loadtxt([t.replace(',\n','\n') for t in lines[0+(Dy)*i:Dy+(Dy)*i]], delimiter=',').T
-#                     print(one_slice.shape)
-                    Vol[:,:,i] = one_slice
+                    one_slice = [t[:-1] if t[-1]==',' else t for t in lines[0+(Dy)*i:Dy+(Dy)*i] ]
+#                     one_slice = [t.replace(',\n','\n') for t in lines[0+(Dy)*i:Dy+(Dy)*i]]
+#                     print(one_slice)
+#                     print(len(one_slice))
+                    Vol[:,:,i] = np.loadtxt(one_slice, delimiter=',',dtype=int,unpack=True)
                 except:
                     print("error happens on z index: "+ str(i))
 
