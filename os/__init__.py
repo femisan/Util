@@ -21,6 +21,15 @@ def getFilePathList(foldar_path,file_type=None):
     return file_list
 
 def getDirsList(foldar_path,id_list=None):
+    """Obtain the 
+
+    Args:
+        foldar_path ([type]): [description]
+        id_list ([type], optional): [description]. Defaults to None.
+
+    Returns:
+        [type]: [description]
+    """
     dir_list =[]
     for root, dirs, files in os.walk(foldar_path):
         for cur_dir in dirs:
@@ -88,6 +97,17 @@ def readMRIfromIds(foldar,idList):
     return finalArr
 
 def readViewLineImgs(foldar, idList, shift_dis, pixel_size=0.1953125):
+    """AI is creating summary for readViewLineImgs
+
+    Args:
+        foldar ([type]): [description]
+        idList ([type]): [description]
+        shift_dis ([type]): [description]
+        pixel_size (float, optional): [description]. Defaults to 0.1953125.
+
+    Returns:
+        [type]: [description]
+    """
     imgs = readMRIfromIds(foldar,idList)
     shift_pixel = int(shift_dis/0.1953125)
     for i in range(imgs.shape[2]):

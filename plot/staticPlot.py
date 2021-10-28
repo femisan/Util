@@ -102,7 +102,8 @@ def plotImageWithTitle(image,title='',cbarName='',climit=None,figsize=(5,5),updo
         imgplot=plt.imshow(clip_image,origin='lower')
     else:
         imgplot=plt.imshow(clip_image)
-    imgplot.set_cmap('nipy_spectral')
+    #imgplot.set_cmap('nipy_spectral')
+    imgplot.set_cmap('jet')
 #     imgplot.set_cmap('gist_rainbow')
     plt.title(title)
     if axis is not None and axis is False:

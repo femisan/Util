@@ -7,10 +7,10 @@ class spfd():
         # self.Lz = gridLength[2]
         self.CoilCurrent = None
         self.affineMat = None
+        self.jmag = None
         self.jx = None
         self.jy = None
         self.jz = None
-        self.jmag = None
 
 
     def convCsv2xyz(self,coil_path):
@@ -75,13 +75,17 @@ class spfd():
         with open(brain_map_path) as f:
             first_line = f.readline()
             Dx,Dy,Dz  = [int(t.split('=')[1]) for t in first_line[1:].split(',')[0:3] ]
+            print("Readed Array Size",Dx,Dy,Dz)
             lines = f.readlines()
+            print("Total lines number:",len(lines))
             Vol = np.zeros((Dx,Dy,Dz))
             for i in range(Dz):
                 try:
-                    Vol[:,:,i] = np.loadtxt([t.replace(',\n','\n') for t in lines[0+(Dy+1)*i:Dy+(Dy+1)*i]], delimiter=',').T
+                    one_slice = np.loadtxt([t.replace(',\n','\n') for t in lines[0+(Dy)*i:Dy+(Dy)*i]], delimiter=',').T
+#                     print(one_slice.shape)
+                    Vol[:,:,i] = one_slice
                 except:
-                    print("error happens on: "+ str(i))
+                    print("error happens on z index: "+ str(i))
 
             imageToVTK(
                 output_brain_vtk_path,
@@ -89,10 +93,11 @@ class spfd():
                 pointData={'brain':Vol}
             )
 
-    def visE(self,output_j_vtk_path,result_file_name,conductivity=0.11):
-        return self.visJ(output_j_vtk_path,result_file_name,varibale_name='E',conductivity=conductivity)
 
-    def visJ(self,output_j_vtk_path,result_file_name,varibale_name='J',conductivity=1):
+    def visE(self,output_j_vtk_path,result_file_name,conductivity=0.11,assign_idx=-1):
+        return self.visJ(output_j_vtk_path,result_file_name,varibale_name='E',conductivity=conductivity,assign_idx=assign_idx)
+
+    def visJ(self,output_j_vtk_path,result_file_name,varibale_name='J',conductivity=1,assign_idx=-1):
         txt_keyword = varibale_name +':'
         with open(result_file_name, 'r') as f:
             for line in f:
@@ -111,6 +116,9 @@ class spfd():
                     jz = np.zeros(dim)
                 elif line[:2] == 'J:':
                     index,j_vec = line.replace('J:','').split('=')
+                    material = int(index.split(',')[-1])
+                    if assign_idx != -1 and assign_idx!=material:
+                        continue
                     index = tuple([int(t) for t in index.split(',')][:-1])
                     j_vec = [float(t) for t in j_vec.split(',')]
                     jx[index] = j_vec[0]/conductivity
@@ -120,10 +128,10 @@ class spfd():
                     print("This line didn't processed :" + line)
                     continue
         jmag = np.sqrt(jx**2+jy**2+jz**2)
+        self.jmag = jmag
         self.jx = jx
         self.jy = jy
         self.jz = jz
-        self.jmag = jmag
 #         self.jmag = jmag.copy()
         dict_key = [ varibale_name + t for t in ['x','y','z','mag']]
         write_file_name = imageToVTK(
